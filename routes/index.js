@@ -3,7 +3,7 @@ var router = express.Router();
 
 /* GET home */
 router.get('/', (req, res, next) => {
-  res.render('index', { title: 'Nexmo Chat' });
+  res.render('index', { title: 'Nexmo' });
 });
 
 module.exports = router;
