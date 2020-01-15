@@ -1,12 +1,12 @@
 ![Nexmo][logo]
 
-# Create a Simple Chat Interface with Bootstrap
+# Infinite Scrolling in Nexmo Chat
 
 **Table of Contents**
 
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
-    - [Node &amp; NPM](#node-amp-npm)
+    - [Node & NPM](#node--npm)
     - [Nexmo Account](#nexmo-account)
     - [Nexmo CLI](#nexmo-cli)
   - [Run the Application](#run-the-application)
@@ -66,13 +66,13 @@ The application you're starting with is a chat application built using Bootstrap
 Clone the demo application straight from GitHub.
 
 ```bash
-git clone https://github.com/nexmo-community/bootstrap-styled-nexmo-chat.git
+git clone https://github.com/nexmo-community/infinite-scrolling-pagination.git
 ```
 
 Once cloned, change into the new demo application directory.
 
 ```bash
-cd bootstrap-styled-nexmo-chat
+cd infinite-scrolling-pagination
 ```
 
 Install the npm dependencies.
