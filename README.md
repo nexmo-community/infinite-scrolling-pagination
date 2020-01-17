@@ -118,7 +118,7 @@ nexmo app:create "Nexmo RTC Chat" --capabilities=rtc --rtc-event-url=http://exam
 #### Create Nexmo Conversation
 
 ```bash
-nexmo conversation:create display_name="Bootstrap Chat"
+nexmo conversation:create display_name="Infinite Scrolling"
 # Conversation created: CON-a57b0...11e57f56d
 ```
 
