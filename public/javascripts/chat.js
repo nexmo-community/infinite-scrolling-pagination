@@ -12,6 +12,10 @@ class ChatApp {
     this.messageFeed.scrollTop = position;
   }
 
+  isFeedAtTop() {
+    return 0 === this.messageFeed.scrollTop;
+  }
+
   isFeedAtBottom() {
     return (this.messageFeed.offsetHeight+this.messageFeed.scrollTop)===this.messageFeed.scrollHeight;
   }
@@ -48,6 +52,7 @@ class ChatApp {
 
   setupConversationEvents(conversation, user) {
     this.conversation = conversation;
+    this.user = user;
 
     conversation.on('text', (sender, message) => {
       console.log('*** Message received', sender, message);
@@ -75,10 +80,11 @@ class ChatApp {
   showConversationHistory(conversation, user) {
     conversation
       .getEvents({ page_size: 20, order: 'desc' })
-      .then((events_page) => {
+      .then((eventsPage) => {
+        this.lastPage = eventsPage;
         var eventsHistory = "";
 
-        events_page.items.forEach((value, key) => {
+        eventsPage.items.forEach((value, key) => {
           if (conversation.members.get(value.from)) {
             switch (value.type) {
               case 'text':
@@ -106,6 +112,39 @@ class ChatApp {
             this.messageTextarea.value = '';
         })
         .catch(this.errorLogger);
+    });
+
+    this.messageFeed.addEventListener("scroll", () => {
+      this.scrollHeight = this.messageFeed.scrollHeight;
+
+      if (this.isFeedAtTop() && this.lastPage.hasNext()) {
+        if (this.lastPage.hasNext()) {
+          this.lastPage
+            .getNext()
+            .then((eventsPage) => {
+              this.lastPage = eventsPage;
+              var moreEvents = "";
+
+              eventsPage.items.forEach((value, key) => {
+                if (this.conversation.members.get(value.from)) {
+                  switch (value.type) {
+                    case 'text':
+                      moreEvents = this.senderMessage(this.user, this.conversation.members.get(value.from), value) + moreEvents;
+                      break;
+                    case 'member:joined':
+                      moreEvents = this.memberJoined(this.conversation.members.get(value.from), value) + moreEvents;
+                      break;
+                  }
+                }
+              });
+
+              this.messageFeed.innerHTML = moreEvents + this.messageFeed.innerHTML;
+
+              this.scrollTo(this.messageFeed.scrollHeight-this.scrollHeight);
+            })
+            .catch(this.errorLogger);
+        }
+      }
     });
   }
 
