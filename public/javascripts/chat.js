@@ -8,12 +8,16 @@ class ChatApp {
     this.authenticateUser();
   }
 
+  scrollTo(position) {
+    this.messageFeed.scrollTop = position;
+  }
+
   isFeedAtBottom() {
     return (this.messageFeed.offsetHeight+this.messageFeed.scrollTop)===this.messageFeed.scrollHeight;
   }
 
   scrollFeedToBottom() {
-    this.messageFeed.scrollTop = this.messageFeed.scrollHeight;
+    this.scrollTo(this.messageFeed.scrollHeight);
   }
 
   authenticateUser() {
@@ -46,26 +50,26 @@ class ChatApp {
     this.conversation = conversation;
 
     conversation.on('text', (sender, message) => {
-      console.log('*** Message received', sender, message)
+      console.log('*** Message received', sender, message);
       var feedAtBottom = this.isFeedAtBottom();
       this.messageFeed.innerHTML = this.messageFeed.innerHTML + this.senderMessage(user, sender, message);
 
       if (feedAtBottom) {
         this.scrollFeedToBottom();
       }
-    })
+    });
 
     conversation.on("member:joined", (member, event) => {
-      console.log(`*** ${member.user.name} joined the conversation`)
+      console.log(`*** ${member.user.name} joined the conversation`);
       var feedAtBottom = this.isFeedAtBottom();
       this.messageFeed.innerHTML = this.messageFeed.innerHTML + this.memberJoined(member, event);
 
       if (feedAtBottom) {
         this.scrollFeedToBottom();
       }
-    })
+    });
 
-    this.showConversationHistory(conversation, user)
+    this.showConversationHistory(conversation, user);
   }
 
   showConversationHistory(conversation, user) {
@@ -78,20 +82,20 @@ class ChatApp {
           if (conversation.members.get(value.from)) {
             switch (value.type) {
               case 'text':
-                eventsHistory = this.senderMessage(user, conversation.members.get(value.from), value) + eventsHistory
+                eventsHistory = this.senderMessage(user, conversation.members.get(value.from), value) + eventsHistory;
                 break;
               case 'member:joined':
-                eventsHistory = this.memberJoined(conversation.members.get(value.from), value) + eventsHistory
+                eventsHistory = this.memberJoined(conversation.members.get(value.from), value) + eventsHistory;
                 break;
             }
           }
-        })
+        });
 
-        this.messageFeed.innerHTML = eventsHistory + this.messageFeed.innerHTML
+        this.messageFeed.innerHTML = eventsHistory + this.messageFeed.innerHTML;
 
         this.scrollFeedToBottom();
       })
-      .catch(this.errorLogger)
+      .catch(this.errorLogger);
   }
 
   setupUserEvents() {
@@ -102,21 +106,21 @@ class ChatApp {
             this.messageTextarea.value = '';
         })
         .catch(this.errorLogger);
-    })
+    });
   }
 
   errorLogger(error) {
-    console.log(error)
+    console.log(error);
   }
 
   eventLogger(event) {
     return () => {
-      console.log("'%s' event was sent", event)
+      console.log("'%s' event was sent", event);
     }
   }
 
   memberJoined(member, event) {
-    const date = new Date(Date.parse(event.timestamp))
+    const date = new Date(Date.parse(event.timestamp));
 
     return `<li class="my-2 text-center">` +
     `<p>${member.display_name} joined the conversation <small>@ ${date.toLocaleString('en-GB')}</small></p>` +
@@ -124,7 +128,7 @@ class ChatApp {
   }
 
   senderMessage(user, sender, message) {
-    const date = new Date(Date.parse(message.timestamp))
+    const date = new Date(Date.parse(message.timestamp));
     var output = '';
 
     if (user.name === sender.user.name) {
