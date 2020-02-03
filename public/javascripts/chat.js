@@ -107,6 +107,17 @@ class ChatApp {
         })
         .catch(this.errorLogger);
     });
+
+    this.messageTextarea.addEventListener('keydown', event => {
+      if (event.keyCode === 13) {
+        this.conversation.sendText(this.messageTextarea.value)
+          .then(() => {
+              this.eventLogger('text')();
+              this.messageTextarea.value = '';
+          })
+          .catch(this.errorLogger);
+      }
+    });
   }
 
   errorLogger(error) {
